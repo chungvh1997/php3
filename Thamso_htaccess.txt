@@ -114,6 +114,16 @@ Không cho phép view tất cả các tập tin php
 IndexIgnore *.php *.jpg
 
 
+<IfModule mod_rewrite.c>
+  Options -Multiviews
+  RewriteEngine On
+  RewriteBase /your-path
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule  ^(.+)$ index.php?url=$1 [QSA,L]
+</IfModule>
+
+
 
 
 
