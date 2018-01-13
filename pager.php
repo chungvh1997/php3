@@ -1,14 +1,12 @@
 <?php 
-/**
-* Phân trang by Huong Huong
-*/
+
 class Pager{
 
-	private $_totalItem;// tổng số item
-	public $_nItemOnPage; // số lượng item trong 1 page
-	private $_nPageShow ; // số lượng link page hiển thị
-	private $_totalPage; // tổng số page
-	private $_currentPage; // page hiện tại
+	private $_totalItem; // tổng số item //62
+	public $_nItemOnPage; // số lượng item trong 1 page //9
+	private $_nPageShow ; // số lượng link page hiển thị 
+	private $_totalPage; // tổng số page   62/9= 7
+	private $_currentPage; // page hiện tại // 1
 
 
 	public function __construct($totalItem,$currentPage = 1,$nItemOnPage = 5,$nPageShow = 5){
@@ -18,10 +16,9 @@ class Pager{
 		if ($nPageShow%2==0) {
 			$nPageShow 		= $nPageShow + 1;
 		}
-
 		$this->_nPageShow 	= $nPageShow;
 		$this->_currentPage = abs($currentPage);
-		$this->_totalPage  	= ceil($totalItem/$nItemOnPage);
+		$this->_totalPage  	= ceil($totalItem/$nItemOnPage); //62/9
 	}
 
 	public function get_nItemOnPage(){
@@ -31,10 +28,14 @@ class Pager{
 		return $this->_currentPage;
 	}
 	public function showPagination(){
-		
+		//p     		=3
+		//total 		=62
+		//so sp 1 page  = 9
+		//số trang hthi = 5
 		$paginationHTML 	= '';
 		if($this->_totalPage > 1){
 			$actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			//echo $actual_link; die;
 			
 			$actual_link = explode('?page=', $actual_link)[0];
 			//$actual_link = $arr[0];
@@ -52,31 +53,42 @@ class Pager{
 				$end 	= "<li><a href='$actual_link?page=".$this->_totalPage."'>End</a></li>";
 			}
 
+			//5 < 7
 			if($this->_nPageShow < $this->_totalPage){
+				//đầu
 				if($this->_currentPage == 1){
 					$startPage 	= 1;
 					$endPage 	= $this->_nPageShow;
-				}else if($this->_currentPage == $this->_totalPage){
+				}
+				//cuối
+				else if($this->_currentPage == $this->_totalPage){
 					$startPage		= $this->_totalPage - $this->_nPageShow + 1;
 					//  cái số trang bắt đầu để hiển thị
 					$endPage		= $this->_totalPage;
-				}else{
+				}
+				//3 giữa
+				else{
+					//7 - (5-1)/2 = 5
 					$startPage		= $this->_currentPage - ($this->_nPageShow-1)/2;
-								 //      6							3 = 3
+
+					//7 + (5-1)/2 = 9
 					$endPage		= $this->_currentPage + ($this->_nPageShow-1)/2;
-									//   6					3  = 9
+
 					if($startPage < 1){
-						$endPage	= $endPage + 1;  // 9
+						$endPage	= $endPage + 1;  // 5
 						$startPage 	= 1; //1
 					}
 					//9 > 11
 					if($endPage > $this->_totalPage){
 						$endPage	= $this->_totalPage; //7
+
+						//7 - 5 +1 = 3	
 						$startPage 	= $endPage - $this->_nPageShow + 1; //7-10+1=-2
 					}
 				}
 
-			}else{
+			}
+			else{
 				$startPage		= 1;
 				$endPage		= $this->_totalPage;
 			}
